@@ -1,4 +1,5 @@
-#!/bin/bash -X
+#!/bin/bash
+
 if [ -z "$ENV" ]; then
     echo "ENV variable not found. Please set it and try again"
     exit 1
