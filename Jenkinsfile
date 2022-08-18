@@ -7,6 +7,18 @@ pipeline {
         BRANCH = "${env.BRANCH_NAME}" 
     }
     stages {
+        stage('Send initial notification') {
+            when {
+                anyOf {
+                    branch 'master';
+                    branch 'develop'
+                }
+            }
+            steps {
+                slackSend channel: '#general',
+                          message: "Build for job ${env.JOB_NAME} has started - (<${env.BUILD_URL}|Open>)"
+            }
+        }
         stage('Build') {
             steps {
                 sh 'bash scripts/build.sh' // Run the build.sh asset
@@ -31,4 +43,12 @@ pipeline {
         }
         }
 
+    post {
+        always {
+            slackSend channel: '#general',
+                      color: "${currentBuild.currentResult == 'SUCCESS' ? 'good' : 'danger'}",
+                      message: "Build for job ${env.JOB_NAME} finished with status ${currentBuild.currentResult} - (<${env.BUILD_URL}|Open>)"
+        }
+    }
 }
+
