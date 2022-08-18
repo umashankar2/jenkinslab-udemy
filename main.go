@@ -9,10 +9,10 @@ import (
 )
 
 var env = os.Getenv("TARGET_ENV")
-var commit = os.Getenv("COMMIT_ID")
+var branch = os.Getenv("BRANCH")
 
 func init() {
-    for _, i := range []string{"TARGET_ENV", "COMMIT_ID"} {
+    for _, i := range []string{"TARGET_ENV", "BRANCH"} {
         _, present := os.LookupEnv(i)
         if !present {
             fmt.Printf("%v variable was not found. Please set it and try again\n", i)
@@ -24,8 +24,8 @@ func init() {
             os.Exit(1)
         }
 
-        if commit == "" {
-            fmt.Println("COMMIT_ID can't be empty.")
+        if branch == "" {
+            fmt.Println("BRANCH can't be empty.")
             os.Exit(1)         
         }
     }
@@ -44,7 +44,7 @@ func basicAPI(w http.ResponseWriter, r *http.Request) {
         return
     }
     resp := Response{
-        Description: fmt.Sprintf("You're viewing the AMAZING %v api, deployed from branch %v", env, commit),
+        Description: fmt.Sprintf("You're viewing the %v api, deployed from branch %v", env, branch),
         Environment: env,
         Time:        time.Now(),
     }
@@ -66,6 +66,6 @@ func main() {
     } else {
         serverPort = ":5050"
     }
-    fmt.Printf("Starting server on port %v ...", serverPort)
+    fmt.Printf("Starting server on port %v...", serverPort)
     http.ListenAndServe(serverPort, nil)
 }
