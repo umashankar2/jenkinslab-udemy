@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'bash scripts/build.sh' // Run the build.sh asset
+                sh 'chmod +x scripts/build.sh; bash scripts/build.sh' // Run the build.sh asset
             }
         }
         stage('Test') {
